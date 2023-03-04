@@ -126,15 +126,15 @@ async fn main() -> Result<(), Box<dyn Error>> {
                     }
                     SwarmEvent::Behaviour(MyBehaviourEvent::Floodsub(FloodsubEvent::Message(message))) => {
                         println!(
-                                "Received: '{:?}'",
-                                String::from_utf8_lossy(&message.data)
+                                "Received: '{:?}' from {:?}",
+                                String::from_utf8_lossy(&message.data),
+                                message.source
                             );
                     }
                     SwarmEvent::Behaviour(MyBehaviourEvent::Mdns(event)) => {
                         match event {
                             mdns::Event::Discovered(list) => {
                                 for (peer, _) in list {
-                                    println!("Peer discovered");
                                     swarm.behaviour_mut().floodsub.add_node_to_partial_view(peer);
                                 }
                             }
